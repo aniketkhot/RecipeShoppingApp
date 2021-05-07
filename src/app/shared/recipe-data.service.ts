@@ -12,11 +12,10 @@ import { AuthService } from "../auth/auth.service";
 })
 export class RecipeDataService {
   fetchedRecSub: Subject<Recipe[]> = new Subject<Recipe[]>();
-
+  firstLoad: boolean = true;
   constructor(
     private http: HttpClient,
-    private recipeService: RecipeService,
-    private authService: AuthService
+    private recipeService: RecipeService
   ) {}
 
   saveRecipesData() {

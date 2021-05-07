@@ -35,10 +35,10 @@ export class AuthComponent {
 
     authObs.subscribe(
       (res) => {
-        console.log('in respose');
+        console.log('in respose in login sub');
         console.log(res);
         this.isloading = false;
-        this.router.navigate(['/recipes']);
+        this.router.navigate(['recipes']);
 
       },
       (errorMessage) => {
