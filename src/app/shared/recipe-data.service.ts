@@ -32,31 +32,26 @@ export class RecipeDataService {
   }
 
   fetchRecipesData() {
-    return this.authService.userSub.pipe(
-      take(1),
-      exhaustMap((user) => {
-        return this.http.get<Recipe[]>(
-          "https://recipes-f85b3-default-rtdb.firebaseio.com/recipes.json",
-          {
-            params: new HttpParams().set("auth", user.token),
-          }
-        );
-      }),
-      map((res: Recipe[]) => {
-        console.log(res);
-        return res.map((r) => {
-          console.log(r);
-          return { ...r, ingredients: r.ingredients ? r.ingredients : [] };
-        });
-      }),
-      tap((res: Recipe[]) => {
-        this.recipeService.setRecipes(res);
-      }),
-      catchError((err) => {
-        console.log(err);
-        return throwError(err);
-      })
-    );
+    return this.http
+      .get<Recipe[]>(
+        "https://recipes-f85b3-default-rtdb.firebaseio.com/recipes.json"
+      )
+      .pipe(
+        map((res: Recipe[]) => {
+          console.log(res);
+          return res.map((r) => {
+            console.log(r);
+            return { ...r, ingredients: r.ingredients ? r.ingredients : [] };
+          });
+        }),
+        tap((res: Recipe[]) => {
+          this.recipeService.setRecipes(res);
+        }),
+        catchError((err) => {
+          console.log(err);
+          return throwError(err);
+        })
+      );
   }
 
   // deleteSingleRecipe(id: number) {
