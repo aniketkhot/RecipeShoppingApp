@@ -11,6 +11,7 @@ export class RecipesComponent implements OnInit {
   constructor(private recDataService: RecipeDataService) { }
 
   ngOnInit() {
+    console.log(' in recipes.component')
     // if(this.recDataService.firstLoad) {
     //   this.recDataService.fetchRecipesData().subscribe()
     //   this.recDataService.firstLoad = false;

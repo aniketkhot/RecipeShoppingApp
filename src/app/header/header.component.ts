@@ -26,4 +26,9 @@ export class HeaderComponent implements OnInit {
     let recs: Recipe[];
     this.dataService.fetchRecipesData().subscribe();
   }
+
+  onLogOut() {
+    this.authService.LogOut();
+
+  }
 }

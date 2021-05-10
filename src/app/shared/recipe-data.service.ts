@@ -37,17 +37,18 @@ export class RecipeDataService {
       )
       .pipe(
         map((res: Recipe[]) => {
-          console.log(res);
+          console.log('in fetchRecipe pipe map');
           return res.map((r) => {
             console.log(r);
             return { ...r, ingredients: r.ingredients ? r.ingredients : [] };
           });
         }),
         tap((res: Recipe[]) => {
+          console.log('in fetchRecipe pipe tap');
           this.recipeService.setRecipes(res);
         }),
         catchError((err) => {
-          console.log(err);
+          console.log('in fetchRecipe  pipe catchError');
           return throwError(err);
         })
       );
