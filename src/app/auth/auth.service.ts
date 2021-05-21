@@ -38,7 +38,7 @@ export class AuthService {
         tap((resData) => {
           this.authenticateUser(resData);
         })
-      );
+      ); 
   }
   LogIn(email: string, password: string) {
     return this.http
@@ -59,6 +59,7 @@ export class AuthService {
   }
 
   LogOut() {
+    localStorage.removeItem('userData');
     this.userSub.next(null);
     this.router.navigate(["/auth"]);
     if (this.tokenExpirationTimer) {

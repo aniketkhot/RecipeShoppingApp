@@ -30,7 +30,7 @@ const appRoutes: Routes = [
         component: RecipeEditComponent,
         resolve: [RecipeResolver],
       },
-    ]
+    ],
     //  resolve: [RecipeResolver],
   },
   { path: "shopping-list", component: ShoppingListComponent },

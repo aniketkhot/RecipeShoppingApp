@@ -12,10 +12,10 @@ export class RecipesComponent implements OnInit {
 
   ngOnInit() {
     console.log(' in recipes.component')
-    // if(this.recDataService.firstLoad) {
-    //   this.recDataService.fetchRecipesData().subscribe()
-    //   this.recDataService.firstLoad = false;
-    // }
+    if(this.recDataService.firstLoad) {
+      this.recDataService.fetchRecipesData().subscribe()
+      this.recDataService.firstLoad = false;
+    }
   }
 
 }

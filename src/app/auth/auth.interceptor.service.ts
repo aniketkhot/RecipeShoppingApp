@@ -6,7 +6,7 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 
-import { exhaustMap, take } from "rxjs/operators";
+import { exhaustMap, take, tap } from "rxjs/operators";
 import { AuthService } from "./auth.service";
 
 @Injectable()
@@ -16,6 +16,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
 
     return this.authService.userSub.pipe(
+      // tap(u => console.error(u)),
       take(1),
       exhaustMap((user) => {
 
