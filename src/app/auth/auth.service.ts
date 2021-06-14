@@ -4,7 +4,10 @@ import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, throwError } from "rxjs";
 import { User } from "./user.model";
 import { Router } from "@angular/router";
-import { environment } from "../../environments/environment"
+import { environment } from "../../environments/environment";
+import { Store } from "@ngrx/store";
+import * as AuthActions from "./store/auth.actions";
+import * as FromRoot from "../store/app.reducer"
 
 export interface AuthResponseData {
   idToken: string;
@@ -19,15 +22,20 @@ export interface AuthResponseData {
   providedIn: "root",
 })
 export class AuthService {
-  userSub = new BehaviorSubject<User>(null);
+  // userSub = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    public store: Store<FromRoot.AppState>
+  ) {}
 
   signUp(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="+environment.firebaseKey,
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" +
+          environment.firebaseKey,
         {
           email: email,
           password: password,
@@ -44,7 +52,8 @@ export class AuthService {
   LogIn(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="+environment.firebaseKey,
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
+          environment.firebaseKey,
         {
           email: email,
           password: password,
@@ -60,13 +69,14 @@ export class AuthService {
   }
 
   LogOut() {
-    localStorage.removeItem('userData');
-    this.userSub.next(null);
+    localStorage.removeItem("userData");
+    // this.userSub.next(null);
+    this.store.dispatch(new AuthActions.Logout())
     this.router.navigate(["/auth"]);
     if (this.tokenExpirationTimer) {
       console.log(this.tokenExpirationTimer);
       clearTimeout(this.tokenExpirationTimer);
-      console.log(this.tokenExpirationTimer +"tokenExpirationTimer ref");
+      console.log(this.tokenExpirationTimer + "tokenExpirationTimer ref");
     }
     this.tokenExpirationTimer = null;
   }
@@ -91,11 +101,12 @@ export class AuthService {
 
     if (loadedUser.token) {
       console.log("in autoLogin");
-      console.log(user._tokenExpirationDate)
-      this.userSub.next(loadedUser);
+      console.log(user._tokenExpirationDate);
+      // this.userSub.next(loadedUser);
+      this.store.dispatch(new AuthActions.Login(loadedUser))
       const expirationDuration =
         new Date(user._tokenExpirationDate).getTime() - new Date().getTime();
-        console.log(expirationDuration)
+      console.log(expirationDuration);
       this.autoLogOut(expirationDuration);
     }
   }
@@ -116,7 +127,10 @@ export class AuthService {
       resData.idToken,
       expDate
     );
-    this.userSub.next(user);
+
+    this.store.dispatch(new AuthActions.Signup(user));
+
+    // this.userSub.next(user);
     this.autoLogOut(resData.expiresIn * 1000);
     localStorage.setItem("userData", JSON.stringify(user));
   }

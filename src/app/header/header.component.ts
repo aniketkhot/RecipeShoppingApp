@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { AuthService } from '../auth/auth.service';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeDataService } from '../shared/recipe-data.service';
+import * as FromApp from "../store/app.reducer"
 
 @Component({
   selector: 'app-header',
@@ -9,12 +11,12 @@ import { RecipeDataService } from '../shared/recipe-data.service';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticated: boolean= false;
-  constructor(private dataService: RecipeDataService, private authService: AuthService) {}
+  constructor(private dataService: RecipeDataService, private authService: AuthService, private store: Store<FromApp.AppState>) {}
 
   ngOnInit() {
-    this.authService.userSub.subscribe(user =>
+    this.store.select('auth').subscribe(authState =>
     {
-      this.isAuthenticated = !user ? false : true;
+      this.isAuthenticated = !authState.user ? false : true;
     }
       )
   }

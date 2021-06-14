@@ -22,7 +22,7 @@ export class AuthGaurdService implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | UrlTree | Observable<boolean | UrlTree> {
     console.log('in guard')
-    return this.authService.userSub.pipe(
+    return this.authService.store.select('auth').pipe(
 
       map(user => {
         const isAuth = !!user;
