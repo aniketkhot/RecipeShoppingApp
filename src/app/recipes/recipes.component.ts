@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RecipeDataService } from '../shared/recipe-data.service';
 
 @Component({
   selector: 'app-recipes',
@@ -8,14 +7,10 @@ import { RecipeDataService } from '../shared/recipe-data.service';
 })
 export class RecipesComponent implements OnInit {
 
-  constructor(private recDataService: RecipeDataService) { }
+  constructor() { }
 
   ngOnInit() {
-    console.log(' in recipes.component')
-    if(this.recDataService.firstLoad) {
-      this.recDataService.fetchRecipesData().subscribe()
-      this.recDataService.firstLoad = false;
-    }
+  
   }
 
 }

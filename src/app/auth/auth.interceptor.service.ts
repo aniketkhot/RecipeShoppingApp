@@ -7,16 +7,12 @@ import {
 } from "@angular/common/http";
 
 import { exhaustMap, take, map } from "rxjs/operators";
-import { AuthService } from "./auth.service";
 import * as FromApp from "../store/app.reducer";
 import { Store } from "@ngrx/store";
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(
-    private authService: AuthService,
-    private store: Store<FromApp.AppState>
-  ) {}
+  constructor(private store: Store<FromApp.AppState>) {}
   intercept(req: HttpRequest<any>, handler: HttpHandler) {
     return this.store.select("auth").pipe(
       // tap(u => console.error(u)),

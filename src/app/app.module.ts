@@ -5,13 +5,17 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./header/header.component";
 
-
 import { AppRoutingModule } from "./app-routing.module";
-import { RecipeService } from "./recipes/recipe.service";
 import { AuthInterceptorService } from "./auth/auth.interceptor.service";
 import { SharedModule } from "./shared/shared.module";
 import { StoreModule } from "@ngrx/store";
-import * as fromRoot from "./store/app.reducer"
+import * as fromRoot from "./store/app.reducer";
+import { EffectsModule } from "@ngrx/effects";
+import { AuthEffects } from "./auth/store/auth.effects";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { environment } from "src/environments/environment";
+import { StoreRouterConnectingModule } from "@ngrx/router-store";
+import { RecipeEffects } from "./recipes/store/recipe.effect";
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -21,10 +25,11 @@ import * as fromRoot from "./store/app.reducer"
     AppRoutingModule,
     SharedModule,
     StoreModule.forRoot(fromRoot.appReducers),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    StoreRouterConnectingModule.forRoot(),
   ],
   providers: [
-
-    RecipeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
