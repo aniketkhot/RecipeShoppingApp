@@ -22,66 +22,66 @@ export class AuthComponent implements OnDestroy {
   constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) {}
 
   onSwitchForm() {
-    this.isSignUp = !this.isSignUp;
+	this.isSignUp = !this.isSignUp;
   }
 
   onSubmit(authform: NgForm) {
-    if(!authform.valid) {return}
+	if(!authform.valid) {return}
 
-    const email = authform.value.email;
-    const password = authform.value.password;
-    let authObs: Observable<AuthResponseData>
-    this.isloading = true;
-    this.error = null;
-    if (this.isSignUp) {
-      authObs= this.authService.signUp(email, password);
-    } else {
-      authObs= this.authService.LogIn(email, password);
-    }
+	const email = authform.value.email;
+	const password = authform.value.password;
+	let authObs: Observable<AuthResponseData>
+	this.isloading = true;
+	this.error = null;
+	if (this.isSignUp) {
+	  authObs= this.authService.signUp(email, password);
+	} else {
+	  authObs= this.authService.LogIn(email, password);
+	}
 
-    authObs.subscribe(
-      (res) => {
-        console.log('in respose in login sub');
-        console.log(res);
-        this.isloading = false;
-        this.router.navigate(['recipes']);
+	authObs.subscribe(
+	  (res) => {
+		console.log('in respose in login sub');
+		console.log(res);
+		this.isloading = false;
+		this.router.navigate(['recipes']);
 
-      },
-      (errorMessage) => {
-        console.log('in error');
-        this.error = errorMessage;
-        this.showError(errorMessage);
-        this.isloading = false;
-      }
-    )
+	  },
+	  (errorMessage) => {
+		console.log('in error');
+		this.error = errorMessage;
+		this.showError(errorMessage);
+		this.isloading = false;
+	  }
+	)
 
-    authform.reset();
+	authform.reset();
   }
 
   onHandleError() {
-    this.error = null;
+	this.error = null;
   }
 
   private showError(message: string) {
-    
-    const alertCompFactory= this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
-    const alertComptRef = this.alertHost.viewContainerRef;
-    alertComptRef.clear();
-    const alertComp = alertComptRef.createComponent(alertCompFactory);
-    alertComp.instance.message = message;
-    this.closeSub = alertComp.instance.close.subscribe(()=> {
-      this.closeSub.unsubscribe();
-      alertComptRef.clear();
-    });
+	
+	const alertCompFactory= this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+	const alertComptRef = this.alertHost.viewContainerRef;
+	alertComptRef.clear();
+	const alertComp = alertComptRef.createComponent(alertCompFactory);
+	alertComp.instance.message = message;
+	this.closeSub = alertComp.instance.close.subscribe(()=> {
+	  this.closeSub.unsubscribe();
+	  alertComptRef.clear();
+	});
 
   }
 
 
   ngOnDestroy() {
   
-    if(this.closeSub) {
-      this.closeSub.unsubscribe();
-    }
+	if(this.closeSub) {
+	  this.closeSub.unsubscribe();
+	}
   
   }
 }

@@ -11,13 +11,13 @@ export class LoginGuardService implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
   canActivate(router: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    return this.authService.userSub.pipe(map(user =>{
-      const isAuth = !!user
-      if(!isAuth) {
-        return true;
-      }
-      return this.router.createUrlTree(['/recipes'])
-    }))
+	return this.authService.userSub.pipe(map(user =>{
+	  const isAuth = !!user
+	  if(!isAuth) {
+		return true;
+	  }
+	  return this.router.createUrlTree(['/recipes'])
+	}))
 
   }
 }
